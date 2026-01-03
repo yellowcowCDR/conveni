@@ -1,0 +1,478 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+/* 헤더 */
+.header {
+    background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+    border-radius: 20px;
+    padding: 40px;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -5%;
+    width: 300px;
+    height: 300px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+.headerContent {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+}
+
+.headerTitle {
+    font-size: 32px;
+    font-weight: 800;
+    color: #FFFFFF;
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+}
+
+.headerSubtitle {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+}
+
+/* 메인 컨텐츠 */
+.mainContent {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* 섹션 */
+.section {
+    background: #FFFFFF;
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    border: 1px solid #E5E7EB;
+}
+
+.section:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+.sectionTitle {
+    font-size: 18px;
+    font-weight: 700;
+    color: #1F2937;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.sectionNumber {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+    color: white;
+    border-radius: 10px;
+    font-size: 16px;
+    font-weight: 800;
+    flex-shrink: 0;
+}
+
+.sectionContent {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* 아이템 컨테이너 */
+.itemsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.itemRow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.itemLabel {
+    min-width: 100px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #6B7280;
+}
+
+/* 인풋 그룹 */
+.inputGroup {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.inputLabel {
+    min-width: 100px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #6B7280;
+}
+
+.inputField {
+    flex: 1;
+    height: 50px;
+    border: 2px solid #E5E7EB;
+    border-radius: 12px;
+    padding: 0 16px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #1F2937;
+    background: #F9FAFB;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.inputField:focus {
+    outline: none;
+    border-color: #4F46E5;
+    background: #FFFFFF;
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+}
+
+.inputField::placeholder {
+    color: #9CA3AF;
+}
+
+/* 버튼 */
+.buttonGroup {
+    display: flex;
+    gap: 12px;
+}
+
+.btnAdd {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex: 1;
+    height: 48px;
+    background: #4F46E5;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.btnAdd:hover {
+    background: #4338CA;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+}
+
+.btnAdd:active {
+    transform: translateY(0);
+}
+
+.btnSectionReset {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex: 1;
+    height: 48px;
+    background: #6B7280;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+}
+
+.btnSectionReset:hover {
+    background: #9CA3AF;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(107, 114, 128, 0.4);
+}
+
+.btnSectionReset:active {
+    transform: translateY(0);
+}
+
+.btnDelete {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    background: rgba(239, 68, 68, 0.1);
+    color: #EF4444;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+    flex-shrink: 0;
+}
+
+.btnDelete:hover {
+    background: #EF4444;
+    color: white;
+    transform: rotate(90deg) scale(1.1);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.btnDelete:active {
+    transform: rotate(90deg) scale(0.95);
+}
+
+.deleteIcon {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2.5;
+}
+
+.btnIcon {
+    width: 20px;
+    height: 20px;
+    stroke-width: 2.5;
+}
+
+/* 계산 정보 */
+.calculationInfo {
+    background: linear-gradient(135deg, #E0E7FF 0%, #DBEAFE 100%);
+    padding: 16px;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 600;
+    color: #4F46E5;
+}
+
+/* 소계 */
+.subtotal {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 16px;
+    border-top: 2px solid #E5E7EB;
+}
+
+.subtotalLabel {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1F2937;
+}
+
+.subtotalValue {
+    font-size: 22px;
+    font-weight: 800;
+    color: #4F46E5;
+}
+
+/* 도움말 텍스트 */
+.helpText {
+    font-size: 13px;
+    color: #6B7280;
+    font-style: italic;
+}
+
+/* 총 합계 섹션 */
+.totalSection {
+    background: linear-gradient(135deg, #667EEA 0%, #764BA2 100%);
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    color: white;
+    position: relative;
+    overflow: hidden;
+}
+
+.totalSection::before {
+    content: '';
+    position: absolute;
+    top: -30%;
+    left: -10%;
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+}
+
+.totalTitle {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    position: relative;
+    z-index: 1;
+}
+
+.totalBox {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 1;
+}
+
+.totalAmount {
+    font-size: 42px;
+    font-weight: 900;
+    color: #1F2937;
+    letter-spacing: -1px;
+}
+
+.totalHelp {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.9);
+    margin-top: 16px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+/* 전체 초기화 버튼 */
+.btnReset {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    height: 56px;
+    background: #1F2937;
+    color: white;
+    border: none;
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    margin-bottom: 20px;
+}
+
+.btnReset:hover {
+    background: #374151;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(31, 41, 55, 0.4);
+}
+
+.btnReset:active {
+    transform: translateY(0);
+}
+
+/* 반응형 */
+@media (max-width: 640px) {
+    .container {
+        padding: 12px;
+    }
+
+    .header {
+        padding: 28px 20px;
+        border-radius: 16px;
+    }
+
+    .headerTitle {
+        font-size: 24px;
+    }
+
+    .headerSubtitle {
+        font-size: 14px;
+    }
+
+    .section {
+        padding: 20px;
+        border-radius: 12px;
+    }
+
+    .sectionTitle {
+        font-size: 16px;
+    }
+
+    .itemRow {
+        flex-wrap: wrap;
+    }
+
+    .itemLabel,
+    .inputLabel {
+        min-width: 100%;
+        margin-bottom: 4px;
+    }
+
+    .inputField {
+        height: 46px;
+    }
+
+    .btnDelete {
+        width: 100%;
+        margin-top: 8px;
+    }
+
+    .inputGroup {
+        flex-wrap: wrap;
+    }
+
+    .totalAmount {
+        font-size: 32px;
+    }
+
+    .subtotalValue {
+        font-size: 20px;
+    }
+
+    .buttonGroup {
+        flex-direction: column;
+    }
+
+    .btnAdd,
+    .btnSectionReset {
+        width: 100%;
+    }
+}
