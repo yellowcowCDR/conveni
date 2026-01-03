@@ -99,6 +99,14 @@ export default function Home() {
         closeModal()
     }
 
+    const clearReceiptCount = () => {
+        setReceiptCount('')
+    }
+
+    const clearPreviousBalance = () => {
+        setPreviousBalance('')
+    }
+
     return (
         <div className={styles.container}>
             {/* 헤더 */}
@@ -175,14 +183,28 @@ export default function Home() {
                     <div className={styles.sectionContent}>
                         <div className={styles.inputGroup}>
                             <label className={styles.inputLabel}>영수증 갯수</label>
-                            <input
-                                type="number"
-                                className={styles.inputField}
-                                placeholder="갯수 입력"
-                                min="0"
-                                value={receiptCount}
-                                onChange={(e) => setReceiptCount(e.target.value)}
-                            />
+                            <div className={styles.inputWrapper}>
+                                <input
+                                    type="number"
+                                    className={`${styles.inputField} ${receiptCount ? styles.inputWithClear : ''}`}
+                                    placeholder="갯수 입력"
+                                    min="0"
+                                    value={receiptCount}
+                                    onChange={(e) => setReceiptCount(e.target.value)}
+                                />
+                                {receiptCount && (
+                                    <button
+                                        type="button"
+                                        className={styles.btnInputClear}
+                                        onClick={clearReceiptCount}
+                                        title="입력 내용 지우기"
+                                    >
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="18" height="18">
+                                            <path d="M18 6L6 18M6 6l12 12" strokeWidth="2.5" strokeLinecap="round" />
+                                        </svg>
+                                    </button>
+                                )}
+                            </div>
                         </div>
                         <div className={styles.calculationInfo}>
                             <span>{(parseInt(receiptCount) || 0).toLocaleString()}개 × 6,000원 = {formatCurrency(calculateOver6000())}</span>
@@ -203,13 +225,27 @@ export default function Home() {
                     <div className={styles.sectionContent}>
                         <div className={styles.inputGroup}>
                             <label className={styles.inputLabel}>과부족금</label>
-                            <input
-                                type="number"
-                                className={styles.inputField}
-                                placeholder="금액 입력 (+ 또는 -)"
-                                value={previousBalance}
-                                onChange={(e) => setPreviousBalance(e.target.value)}
-                            />
+                            <div className={styles.inputWrapper}>
+                                <input
+                                    type="number"
+                                    className={`${styles.inputField} ${previousBalance ? styles.inputWithClear : ''}`}
+                                    placeholder="금액 입력 (+ 또는 -)"
+                                    value={previousBalance}
+                                    onChange={(e) => setPreviousBalance(e.target.value)}
+                                />
+                                {previousBalance && (
+                                    <button
+                                        type="button"
+                                        className={styles.btnInputClear}
+                                        onClick={clearPreviousBalance}
+                                        title="입력 내용 지우기"
+                                    >
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" width="18" height="18">
+                                            <path d="M18 6L6 18M6 6l12 12" strokeWidth="2.5" strokeLinecap="round" />
+                                        </svg>
+                                    </button>
+                                )}
+                            </div>
                         </div>
                         <p className={styles.helpText}>* 플러스(+)는 그대로, 마이너스(-)는 음수로 입력</p>
                     </div>

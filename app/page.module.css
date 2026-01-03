@@ -178,6 +178,49 @@
     color: #9CA3AF;
 }
 
+/* 입력 필드 내부 X 버튼 */
+.inputWrapper {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+}
+
+.inputWithClear {
+    padding-right: 45px !important;
+}
+
+.btnInputClear {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+    background: rgba(107, 114, 128, 0.1);
+    color: #6B7280;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+    flex-shrink: 0;
+}
+
+.btnInputClear:hover {
+    background: #6B7280;
+    color: white;
+    transform: translateY(-50%) scale(1.1);
+}
+
+.btnInputClear:active {
+    transform: translateY(-50%) scale(0.95);
+}
+
+
 /* 버튼 */
 .buttonGroup {
     display: flex;
@@ -451,9 +494,11 @@
     }
 
     .btnDelete {
-        width: 100%;
-        margin-top: 8px;
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
     }
+
 
     .inputGroup {
         flex-wrap: wrap;
@@ -467,12 +512,4 @@
         font-size: 20px;
     }
 
-    .buttonGroup {
-        flex-direction: column;
-    }
-
-    .btnAdd,
-    .btnSectionReset {
-        width: 100%;
-    }
 }
