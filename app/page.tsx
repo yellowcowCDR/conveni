@@ -40,6 +40,11 @@ export default function Home() {
     }
 
     const updateUnderItem = (id: number, value: string) => {
+        // 양수만 허용
+        const numValue = parseFloat(value)
+        if (value !== '' && (isNaN(numValue) || numValue < 0)) {
+            return
+        }
         setUnderItems(underItems.map(item =>
             item.id === id ? { ...item, amount: value } : item
         ))
@@ -132,11 +137,14 @@ export default function Home() {
                                     <label className={styles.itemLabel}>항목 {index + 1}</label>
                                     <input
                                         type="number"
+                                        inputMode="numeric"
+                                        pattern="[0-9]*"
                                         className={styles.inputField}
                                         placeholder="금액 입력"
                                         min="0"
                                         value={item.amount}
                                         onChange={(e) => updateUnderItem(item.id, e.target.value)}
+                                        onKeyDown={(e) => e.key === '-' && e.preventDefault()}
                                     />
                                     <button
                                         type="button"
@@ -186,11 +194,20 @@ export default function Home() {
                             <div className={styles.inputWrapper}>
                                 <input
                                     type="number"
+                                    inputMode="numeric"
+                                    pattern="[0-9]*"
                                     className={`${styles.inputField} ${receiptCount ? styles.inputWithClear : ''}`}
                                     placeholder="갯수 입력"
                                     min="0"
                                     value={receiptCount}
-                                    onChange={(e) => setReceiptCount(e.target.value)}
+                                    onChange={(e) => {
+                                        const value = e.target.value
+                                        const numValue = parseFloat(value)
+                                        if (value === '' || (!isNaN(numValue) && numValue >= 0)) {
+                                            setReceiptCount(value)
+                                        }
+                                    }}
+                                    onKeyDown={(e) => e.key === '-' && e.preventDefault()}
                                 />
                                 {receiptCount && (
                                     <button
@@ -228,10 +245,19 @@ export default function Home() {
                             <div className={styles.inputWrapper}>
                                 <input
                                     type="number"
+                                    inputMode="numeric"
+                                    pattern="[0-9]*"
                                     className={`${styles.inputField} ${previousBalance ? styles.inputWithClear : ''}`}
-                                    placeholder="금액 입력 (+ 또는 -)"
+                                    placeholder="금액 입력"
                                     value={previousBalance}
-                                    onChange={(e) => setPreviousBalance(e.target.value)}
+                                    onChange={(e) => {
+                                        const value = e.target.value
+                                        const numValue = parseFloat(value)
+                                        if (value === '' || (!isNaN(numValue) && numValue >= 0)) {
+                                            setPreviousBalance(value)
+                                        }
+                                    }}
+                                    onKeyDown={(e) => e.key === '-' && e.preventDefault()}
                                 />
                                 {previousBalance && (
                                     <button
@@ -247,7 +273,7 @@ export default function Home() {
                                 )}
                             </div>
                         </div>
-                        <p className={styles.helpText}>* 플러스(+)는 그대로, 마이너스(-)는 음수로 입력</p>
+                        <p className={styles.helpText}>* 숫자만 입력 가능합니다</p>
                     </div>
                 </section>
 
