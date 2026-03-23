@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import styles from './page.module.css'
 import ConfirmModal from './components/ConfirmModal'
 
@@ -23,6 +23,16 @@ export default function Home() {
         message: '',
         onConfirm: () => { }
     })
+
+    const [threshold, setThreshold] = useState(6000)
+
+    useEffect(() => {
+        const transitionDate = new Date('2026-04-01')
+        const now = new Date()
+        if (now >= transitionDate) {
+            setThreshold(6500)
+        }
+    }, [])
 
     const addUnderItem = () => {
         setUnderItems([...underItems, { id: itemIdCounter, amount: '' }])
@@ -50,13 +60,13 @@ export default function Home() {
         ))
     }
 
-    const calculateUnder6000 = () => {
+    const calculateBelowThreshold = () => {
         return underItems.reduce((sum, item) => sum + (parseFloat(item.amount) || 0), 0)
     }
 
-    const calculateOver6000 = () => {
+    const calculateAboveThreshold = () => {
         const count = parseInt(receiptCount) || 0
-        return count * 6000
+        return count * threshold
     }
 
     const getPreviousBalance = () => {
@@ -64,7 +74,7 @@ export default function Home() {
     }
 
     const getTotalAmount = () => {
-        return calculateUnder6000() + calculateOver6000() + getPreviousBalance()
+        return calculateBelowThreshold() + calculateAboveThreshold() + getPreviousBalance()
     }
 
     const formatCurrency = (amount: number) => {
@@ -74,7 +84,7 @@ export default function Home() {
     const resetSection1 = () => {
         setModalConfig({
             isOpen: true,
-            message: '6000원 미만 결제금액 정산을 초기화하시겠습니까?',
+            message: `${threshold}원 미만 결제금액 정산을 초기화하시겠습니까?`,
             onConfirm: () => {
                 setUnderItems([{ id: 1, amount: '' }])
                 setItemIdCounter(2)
@@ -124,11 +134,11 @@ export default function Home() {
 
             {/* 메인 컨텐츠 */}
             <main className={styles.mainContent}>
-                {/* 1. 6000원 미만 결제금액 정산 */}
+                {/* 1. {threshold}원 미만 결제금액 정산 */}
                 <section className={styles.section}>
                     <h2 className={styles.sectionTitle}>
                         <span className={styles.sectionNumber}>1</span>
-                        6000원 미만 결제금액 정산
+                        {threshold}원 미만 결제금액 정산
                     </h2>
                     <div className={styles.sectionContent}>
                         <div className={styles.itemsContainer}>
@@ -176,17 +186,17 @@ export default function Home() {
                             </button>
                         </div>
                         <div className={styles.subtotal}>
-                            <span className={styles.subtotalLabel}>6000원 미만 합계:</span>
-                            <span className={styles.subtotalValue}>{formatCurrency(calculateUnder6000())}</span>
+                            <span className={styles.subtotalLabel}>{threshold}원 미만 합계:</span>
+                            <span className={styles.subtotalValue}>{formatCurrency(calculateBelowThreshold())}</span>
                         </div>
                     </div>
                 </section>
 
-                {/* 2. 6000원 이상 결제금액 정산 */}
+                {/* 2. {threshold}원 이상 결제금액 정산 */}
                 <section className={styles.section}>
                     <h2 className={styles.sectionTitle}>
                         <span className={styles.sectionNumber}>2</span>
-                        6000원 이상 결제금액 정산
+                        {threshold}원 이상 결제금액 정산
                     </h2>
                     <div className={styles.sectionContent}>
                         <div className={styles.inputGroup}>
@@ -224,11 +234,11 @@ export default function Home() {
                             </div>
                         </div>
                         <div className={styles.calculationInfo}>
-                            <span>{(parseInt(receiptCount) || 0).toLocaleString()}개 × 6,000원 = {formatCurrency(calculateOver6000())}</span>
+                            <span>{(parseInt(receiptCount) || 0).toLocaleString()}개 × {threshold.toLocaleString()}원 = {formatCurrency(calculateAboveThreshold())}</span>
                         </div>
                         <div className={styles.subtotal}>
-                            <span className={styles.subtotalLabel}>6000원 이상 합계:</span>
-                            <span className={styles.subtotalValue}>{formatCurrency(calculateOver6000())}</span>
+                            <span className={styles.subtotalLabel}>{threshold}원 이상 합계:</span>
+                            <span className={styles.subtotalValue}>{formatCurrency(calculateAboveThreshold())}</span>
                         </div>
                     </div>
                 </section>
