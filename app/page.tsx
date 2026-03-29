@@ -1,8 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import styles from './page.module.css'
 import ConfirmModal from './components/ConfirmModal'
+import { extractReceiptTotal } from './utils/receiptOcr'
 
 interface UnderItem {
     id: number
@@ -25,6 +26,11 @@ export default function Home() {
     })
 
     const [threshold, setThreshold] = useState(6000)
+    
+    // OCR 관련 상태 및 참조
+    const fileInputRef = useRef<HTMLInputElement>(null)
+    const targetRowRef = useRef<number | null>(null)
+    const [processingOcrId, setProcessingOcrId] = useState<number | null>(null)
 
     useEffect(() => {
         const transitionDate = new Date('2026-04-01')
@@ -58,6 +64,37 @@ export default function Home() {
         setUnderItems(underItems.map(item =>
             item.id === id ? { ...item, amount: value } : item
         ))
+    }
+
+    const handleOcrClick = (id: number) => {
+        targetRowRef.current = id
+        fileInputRef.current?.click()
+    }
+
+    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (!file || targetRowRef.current === null) return
+
+        const targetId = targetRowRef.current
+        setProcessingOcrId(targetId)
+
+        const result = await extractReceiptTotal(file)
+        
+        if (result && result.amount) {
+            updateUnderItem(targetId, String(result.amount))
+        } else {
+            setModalConfig({
+                isOpen: true,
+                message: '영수증에서 금액을 인식하지 못했습니다. 직접 입력해주세요.',
+                onConfirm: () => {}
+            })
+        }
+
+        setProcessingOcrId(null)
+        targetRowRef.current = null
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '' // 동일 파일 재선택 대비 초기화
+        }
     }
 
     const calculateBelowThreshold = () => {
@@ -124,6 +161,15 @@ export default function Home() {
 
     return (
         <div className={styles.container}>
+            {/* OCR을 위한 숨겨진 파일 인풋 */}
+            <input 
+                type="file" 
+                accept="image/*" 
+                ref={fileInputRef} 
+                onChange={handleFileChange} 
+                style={{ display: 'none' }} 
+            />
+
             {/* 헤더 */}
             <header className={styles.header}>
                 <div className={styles.headerContent}>
@@ -155,12 +201,33 @@ export default function Home() {
                                         value={item.amount}
                                         onChange={(e) => updateUnderItem(item.id, e.target.value)}
                                         onKeyDown={(e) => e.key === '-' && e.preventDefault()}
+                                        disabled={processingOcrId === item.id}
                                     />
+                                    <button
+                                        type="button"
+                                        className={styles.btnOcr}
+                                        onClick={() => handleOcrClick(item.id)}
+                                        title="영수증 촬영으로 금액 입력"
+                                        disabled={processingOcrId === item.id || processingOcrId !== null}
+                                    >
+                                        {processingOcrId === item.id ? (
+                                            <svg className={styles.spinner} viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                                <path d="M12 2V6M12 18V22M6 12H2M22 12H18M19.0784 19.0784L16.25 16.25M7.75 7.75L4.92157 4.92157M19.0784 4.92157L16.25 7.75M7.75 16.25L4.92157 19.0784" strokeWidth="2.5" strokeLinecap="round" />
+                                            </svg>
+                                        ) : (
+                                            <svg className={styles.btnIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                                <rect x="3" y="4" width="18" height="16" rx="2" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                                <circle cx="12" cy="12" r="3" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                                <path d="M15 8h.01" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                            </svg>
+                                        )}
+                                    </button>
                                     <button
                                         type="button"
                                         className={styles.btnDelete}
                                         onClick={() => removeUnderItem(item.id)}
                                         title={underItems.length === 1 ? '내용 초기화' : '항목 삭제'}
+                                        disabled={processingOcrId !== null}
                                     >
                                         <svg className={styles.deleteIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                             <path d="M18 6L6 18M6 6l12 12" strokeWidth="2.5" strokeLinecap="round" />

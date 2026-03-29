@@ -107,10 +107,14 @@ async function processImageForOCR(file: File): Promise<HTMLCanvasElement | null>
 
 function parseReceiptAmount(text: string): number | null {
   const lines = text.split('\n');
-  const targetLines = lines.filter(line => /(결.?제|합.?계|총.?액)/.test(line));
+  
+  // OCR 오인식 방지를 위해 키워드 풀 확장 (결제, 합계, 총액, 금액, 총)
+  const targetRegex = /(결.?제|합.?계|총.?액|금.?액|총.*)/;
+  let targetLines = lines.filter(line => targetRegex.test(line));
 
+  // 만약 1차 타겟 라인이 없다면, 안전장치로 모든 라인에서 숫자를 스캔하도록 Fallback (단, 10만 이상의 승인번호 형태는 필터링)
   if (targetLines.length === 0) {
-    return null;
+    targetLines = lines;
   }
 
   // 5.3 Number extraction and normalization
@@ -134,7 +138,8 @@ function parseReceiptAmount(text: string): number | null {
 
   for (const line of targetLines) {
     const amount = extract(line);
-    if (amount !== null && !isNaN(amount)) {
+    // 영수증 총액의 일반적 범위를 벗어나는 거대한 숫자(예: 승인번호 50999857)는 제외
+    if (amount !== null && !isNaN(amount) && amount < 1000000) {
       amounts.push({ line, amount });
     }
   }

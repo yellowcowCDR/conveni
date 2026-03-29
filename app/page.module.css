@@ -323,6 +323,52 @@
     stroke-width: 2.5;
 }
 
+/* OCR 버튼 */
+.btnOcr {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    background: rgba(79, 70, 229, 0.1);
+    color: #4F46E5;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    padding: 0;
+    flex-shrink: 0;
+}
+
+.btnOcr:hover:not(:disabled) {
+    background: #4F46E5;
+    color: white;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
+
+.btnOcr:active:not(:disabled) {
+    transform: scale(0.95);
+}
+
+.btnOcr:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    background: rgba(156, 163, 175, 0.1);
+    color: #9CA3AF;
+}
+
+.spinner {
+    animation: spin 1s linear infinite;
+    width: 20px;
+    height: 20px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
 /* 계산 정보 */
 .calculationInfo {
     background: linear-gradient(135deg, #E0E7FF 0%, #DBEAFE 100%);
@@ -493,7 +539,7 @@
         height: 46px;
     }
 
-    .btnDelete {
+    .btnDelete, .btnOcr {
         width: 44px;
         height: 44px;
         border-radius: 50%;
