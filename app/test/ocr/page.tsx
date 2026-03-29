@@ -9,6 +9,7 @@ interface FileResult {
   file: File;
   previewUrl: string;
   amount: number | null;
+  rawText: string | null;
   timeTaken: number | null;
   status: 'pending' | 'processing' | 'done' | 'error';
 }
@@ -65,14 +66,18 @@ export default function OcrTestPage() {
     const startTime = performance.now();
     try {
       // @ts-ignore (worker null check is done outside)
-      const amount = await extractReceiptTotal(file, worker);
+      const result = await extractReceiptTotal(file, worker);
       const endTime = performance.now();
       
+      const amount = result?.amount ?? null;
+      const rawText = result?.rawText ?? null;
+
       setFileResults(prev => prev.map(r => 
         r.id === id ? { 
           ...r, 
-          status: amount !== null ? 'done' : 'error',
+          status: result !== null ? 'done' : 'error',
           amount,
+          rawText,
           timeTaken: Math.round(endTime - startTime)
         } : r
       ));
@@ -101,6 +106,7 @@ export default function OcrTestPage() {
       file,
       previewUrl: URL.createObjectURL(file),
       amount: null,
+      rawText: null,
       timeTaken: null,
       status: 'pending'
     }));
@@ -167,6 +173,7 @@ export default function OcrTestPage() {
         file,
         previewUrl: URL.createObjectURL(file),
         amount: null,
+        rawText: null,
         timeTaken: null,
         status: 'pending'
       };
@@ -278,11 +285,17 @@ export default function OcrTestPage() {
               {item.status === 'done' && (
                 <>
                   <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#059669' }}>
-                    {item.amount?.toLocaleString()}원
+                    {item.amount !== null ? `${item.amount.toLocaleString()}원` : '결과 없음'}
                   </div>
-                  <div style={{ fontSize: '12px', color: '#6b7280', marginTop: '4px' }}>
-                    {item.timeTaken}ms
+                  <div style={{ fontSize: '12px', color: '#6b7280', marginTop: '4px', marginBottom: '8px' }}>
+                    {item.timeTaken}ms 소요
                   </div>
+                  {item.rawText && (
+                    <div style={{ textAlign: 'left', backgroundColor: '#f3f4f6', padding: '8px', borderRadius: '4px', maxHeight: '100px', overflowY: 'auto', fontSize: '11px', color: '#374151', whiteSpace: 'pre-wrap' }}>
+                      <strong>인식 원문:</strong><br />
+                      {item.rawText}
+                    </div>
+                  )}
                 </>
               )}
             </div>

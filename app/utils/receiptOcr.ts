@@ -8,7 +8,7 @@ export async function createReceiptOcrWorker(): Promise<Tesseract.Worker> {
 export async function extractReceiptTotal(
   imageFile: File,
   worker?: Tesseract.Worker
-): Promise<number | null> {
+): Promise<{ amount: number | null; rawText: string } | null> {
   const canvas = await processImageForOCR(imageFile);
   
   if (!canvas) return null;
@@ -18,7 +18,8 @@ export async function extractReceiptTotal(
       ? await worker.recognize(canvas) 
       : await Tesseract.recognize(canvas, 'kor+eng');
       
-    return parseReceiptAmount(text);
+    const amount = parseReceiptAmount(text);
+    return { amount, rawText: text };
   } catch (error) {
     console.error('OCR Error:', error);
     return null;
@@ -71,24 +72,27 @@ async function processImageForOCR(file: File): Promise<HTMLCanvasElement | null>
         0, 0, width, cropHeightCanvas           // Dest rect
       );
 
-      // 4.3. Preprocessing (Grayscale + Threshold 150)
+      // 4.3. Preprocessing (Grayscale only, removed harsh threshold due to uneven shadows)
       const imageData = ctx.getImageData(0, 0, width, cropHeightCanvas);
       const data = imageData.data;
 
+      // 밝기 평균을 구해 동적 보정을 할 수도 있지만, 
+      // Tesseract 내장의 Otsu Thresholding 알고리즘이 훨씬 뛰어나므로
+      // 여기서는 흑백 변환(Grayscale) 및 대비 향상 정도만 수행합니다.
       for (let i = 0; i < data.length; i += 4) {
         const r = data[i];
         const g = data[i + 1];
         const b = data[i + 2];
         
         // Grayscale
-        const avg = (r + g + b) / 3;
+        let avg = (r + g + b) / 3;
         
-        // Threshold (150)
-        const threshold = avg > 150 ? 255 : 0;
+        // 대비 강제 조정 (가벼운 Contrast Enhancement)
+        avg = avg < 120 ? avg * 0.8 : Math.min(255, avg * 1.2);
         
-        data[i] = threshold;     // r
-        data[i + 1] = threshold; // g
-        data[i + 2] = threshold; // b
+        data[i] = avg;     // r
+        data[i + 1] = avg; // g
+        data[i + 2] = avg; // b
         // data[i + 3] (alpha) remains unchanged
       }
 
